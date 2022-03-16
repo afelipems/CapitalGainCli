@@ -1,7 +1,6 @@
 ﻿using CapitalGainCli.Domain.Entities;
 using CapitalGainCli.Domain.Enums;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CapitalGainCli.Domain.Services
 {
@@ -13,13 +12,16 @@ namespace CapitalGainCli.Domain.Services
         public static IEnumerable<TaxCalculationResult> CalculateTaxes(IEnumerable<FinancialOperation> financialOperations)
         {
             var resultList = new List<TaxCalculationResult>();
-            decimal averageOperationValue = CalculateAssetWeightedAverageValue(financialOperations.Where(x => x.Operation == OperationType.Buy));
+            var buyHistory = new List<FinancialOperation>();
+            decimal averageOperationValue = 0;
             decimal lossAmount = 0;
 
             foreach(var operation in financialOperations)
             {
                 if(operation.Operation == OperationType.Buy)
                 {
+                    buyHistory.Add(operation);
+                    averageOperationValue = AverageCalculator.CalculateAssetWeightedAverageValue(buyHistory);
                     AddZeroTaxResult(resultList);
                     continue;
                 }
@@ -55,23 +57,7 @@ namespace CapitalGainCli.Domain.Services
             }
 
             return resultList;
-        }
-
-        private static decimal CalculateAssetWeightedAverageValue(IEnumerable<FinancialOperation> financialOperations)
-        {
-            var operationCosts = financialOperations.Select(x => x.UnitCost).Distinct();
-            decimal numerator = 0;
-            int denominator = financialOperations.Sum(x => x.Quantity);
-
-            foreach (var cost in operationCosts)
-            {
-                var operations = financialOperations.Where(x => x.UnitCost == cost);
-                var totalQuantity = operations.Sum(x => x.Quantity);
-                numerator += totalQuantity * cost;
-            }
-
-            return numerator / denominator;
-        }
+        }      
 
         private static void AddZeroTaxResult(List<TaxCalculationResult> taxCalculationResults)
         {
