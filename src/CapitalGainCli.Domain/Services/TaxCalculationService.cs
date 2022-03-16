@@ -10,7 +10,7 @@ namespace CapitalGainCli.Domain.Services
         private const decimal TaxCollectionMinimumThreshold = 20000;
         private const decimal TaxFeePercentage = 0.2m;
 
-        public static List<TaxCalculationResult> CalculateTaxes(List<FinancialOperation> financialOperations)
+        public static IEnumerable<TaxCalculationResult> CalculateTaxes(IEnumerable<FinancialOperation> financialOperations)
         {
             var resultList = new List<TaxCalculationResult>();
             decimal averageOperationValue = CalculateAssetWeightedAverageValue(financialOperations.Where(x => x.Operation == OperationType.Buy));
@@ -54,19 +54,20 @@ namespace CapitalGainCli.Domain.Services
                 }
             }
 
-            return new List<TaxCalculationResult>();
+            return resultList;
         }
 
         private static decimal CalculateAssetWeightedAverageValue(IEnumerable<FinancialOperation> financialOperations)
         {
             var operationCosts = financialOperations.Select(x => x.UnitCost).Distinct();
             decimal numerator = 0;
-            decimal denominator = financialOperations.Count();
+            int denominator = financialOperations.Sum(x => x.Quantity);
 
             foreach (var cost in operationCosts)
             {
-                var operations = financialOperations.Where(x => x.UnitCost == cost).Count();
-                numerator += operations * cost;
+                var operations = financialOperations.Where(x => x.UnitCost == cost);
+                var totalQuantity = operations.Sum(x => x.Quantity);
+                numerator += totalQuantity * cost;
             }
 
             return numerator / denominator;
