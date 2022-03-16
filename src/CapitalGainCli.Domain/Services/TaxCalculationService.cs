@@ -8,17 +8,49 @@ namespace CapitalGainCli.Domain.Services
     public static class TaxCalculationService
     {
         private const decimal TaxCollectionMinimumThreshold = 20000;
+        private const decimal TaxFeePercentage = 0.2m;
 
         public static List<TaxCalculationResult> CalculateTaxes(List<FinancialOperation> financialOperations)
         {
             var resultList = new List<TaxCalculationResult>();
-            var averageOperationValue = CalculateAssetWeightedAverageValue(financialOperations.Where(x => x.Operation == OperationType.Buy));
+            decimal averageOperationValue = CalculateAssetWeightedAverageValue(financialOperations.Where(x => x.Operation == OperationType.Buy));
+            decimal lossAmount = 0;
 
             foreach(var operation in financialOperations)
             {
-                if(operation.Operation == OperationType.Buy || operation.UnitCost <= averageOperationValue)
+                if(operation.Operation == OperationType.Buy)
                 {
-                    resultList.Add(new TaxCalculationResult { Tax = 0 });
+                    AddZeroTaxResult(resultList);
+                    continue;
+                }
+
+                if(operation.UnitCost < averageOperationValue)
+                {
+                    AddZeroTaxResult(resultList);
+                    lossAmount += (operation.Quantity * averageOperationValue) - (operation.Quantity * operation.UnitCost);
+                    continue;
+                }
+
+                if((operation.Quantity * operation.UnitCost) <= TaxCollectionMinimumThreshold)
+                {
+                    AddZeroTaxResult(resultList);
+                    continue;
+                }
+
+                decimal profit = (operation.Quantity * operation.UnitCost) - (operation.Quantity * averageOperationValue);
+                decimal profitLessLoss = profit - lossAmount;
+
+                if(profitLessLoss <= 0)
+                {
+                    AddZeroTaxResult(resultList);
+                    lossAmount -= profit;
+                    continue;
+                }
+                else
+                {
+                    AddTaxResult(resultList, profitLessLoss);
+                    lossAmount = 0;
+                    continue;
                 }
             }
 
@@ -38,6 +70,17 @@ namespace CapitalGainCli.Domain.Services
             }
 
             return numerator / denominator;
+        }
+
+        private static void AddZeroTaxResult(List<TaxCalculationResult> taxCalculationResults)
+        {
+            taxCalculationResults.Add(new TaxCalculationResult { Tax = 0 });
+        }
+
+        private static void AddTaxResult(List<TaxCalculationResult> taxCalculationResults, decimal liquidProfit)
+        {
+            var taxValue = liquidProfit * TaxFeePercentage;
+            taxCalculationResults.Add(new TaxCalculationResult { Tax = taxValue });
         }
     }
 }
