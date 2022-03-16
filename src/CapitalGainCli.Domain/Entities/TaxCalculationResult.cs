@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CapitalGainCli.Domain.DTOs
+namespace CapitalGainCli.Domain.Entities
 {
     public class TaxCalculationResult
     {
