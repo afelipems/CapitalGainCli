@@ -77,5 +77,49 @@ namespace CapitalGainCli.UnitTests.TestData
             new TaxCalculationResult { Tax = 0 },
             new TaxCalculationResult { Tax = 10000 }
         };
+
+        public static IEnumerable<FinancialOperation> GetCaseSixInput() => new List<FinancialOperation>
+        {
+            new FinancialOperation { Operation = OperationType.Buy, UnitCost = 10, Quantity = 10000 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 2, Quantity = 5000 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 20, Quantity = 2000 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 20, Quantity = 2000 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 25, Quantity = 1000 }
+        };
+
+        public static IEnumerable<TaxCalculationResult> GetCaseSixOutput() => new List<TaxCalculationResult>
+        {
+            new TaxCalculationResult { Tax = 0 },
+            new TaxCalculationResult { Tax = 0 },
+            new TaxCalculationResult { Tax = 0 },
+            new TaxCalculationResult { Tax = 0 },
+            new TaxCalculationResult { Tax = 3000 }
+        };
+
+        public static IEnumerable<FinancialOperation> GetCaseSevenInput() => new List<FinancialOperation>
+        {
+            new FinancialOperation { Operation = OperationType.Buy, UnitCost = 10, Quantity = 10000 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 2, Quantity = 5000 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 20, Quantity = 2000 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 20, Quantity = 2000 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 25, Quantity = 1000 },
+            new FinancialOperation { Operation = OperationType.Buy, UnitCost = 20, Quantity = 10000 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 5, Quantity = 5000 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 30, Quantity = 4350 },
+            new FinancialOperation { Operation = OperationType.Sell, UnitCost = 30, Quantity = 650 },
+        };
+
+        public static IEnumerable<TaxCalculationResult> GetCaseSevenOutput() => new List<TaxCalculationResult>
+        {
+            new TaxCalculationResult { Tax = 0 },
+            new TaxCalculationResult { Tax = 0 },
+            new TaxCalculationResult { Tax = 0 },
+            new TaxCalculationResult { Tax = 0 },
+            new TaxCalculationResult { Tax = 3000 },
+            new TaxCalculationResult { Tax = 0 },
+            new TaxCalculationResult { Tax = 0 },
+            new TaxCalculationResult { Tax = 3050 },
+            new TaxCalculationResult { Tax = 0 },
+        };
     }
 }

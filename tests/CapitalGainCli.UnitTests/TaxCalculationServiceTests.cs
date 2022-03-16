@@ -33,7 +33,11 @@ namespace CapitalGainCli.UnitTests
 
                 new object[]{ TaxCalculationTestScenarios.GetCaseFourInput(), TaxCalculationTestScenarios.GetCaseFourOutput() },
 
-                new object[]{ TaxCalculationTestScenarios.GetCaseFiveInput(), TaxCalculationTestScenarios.GetCaseFiveOutput() }
+                new object[]{ TaxCalculationTestScenarios.GetCaseFiveInput(), TaxCalculationTestScenarios.GetCaseFiveOutput() },
+
+                new object[]{ TaxCalculationTestScenarios.GetCaseSixInput(), TaxCalculationTestScenarios.GetCaseSixOutput() },
+
+                new object[]{ TaxCalculationTestScenarios.GetCaseSevenInput(), TaxCalculationTestScenarios.GetCaseSevenOutput() },
             };
         }
     }
