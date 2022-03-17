@@ -14,6 +14,7 @@ This project uses two extra frameworks besides standard .NET applications. Newto
 
 Newtonsoft - A powerful JSON serialization framework that enables to serialize and deserialize any .NET object.
 Autofixture - An opensource library that minimize unit tests setups. It helps to create test mass faster and more easily.
+FluentAssertions - An opensource library that makes test assertions more readable.
 
 ## How to run the project
 
