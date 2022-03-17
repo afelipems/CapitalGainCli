@@ -62,7 +62,7 @@ namespace CapitalGainCli.Domain.Services
 
         private static void AddZeroTaxResult(List<TaxCalculationResult> taxCalculationResults)
         {
-            taxCalculationResults.Add(new TaxCalculationResult { Tax = 0 });
+            taxCalculationResults.Add(new TaxCalculationResult { Tax = Math.Round(0m, 2) });
         }
 
         private static void AddTaxResult(List<TaxCalculationResult> taxCalculationResults, decimal liquidProfit)

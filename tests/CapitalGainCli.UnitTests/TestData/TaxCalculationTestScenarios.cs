@@ -30,7 +30,7 @@ namespace CapitalGainCli.UnitTests.TestData
         public static IEnumerable<TaxCalculationResult> GetCaseTwoOutput() => new List<TaxCalculationResult>
         {
             new TaxCalculationResult { Tax = 0 },
-            new TaxCalculationResult { Tax = 10000 },
+            new TaxCalculationResult { Tax = 10000.00m },
             new TaxCalculationResult { Tax = 0 }
         };
 

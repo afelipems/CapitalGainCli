@@ -8,6 +8,8 @@ namespace CapitalGainCli
 {
     public static class UserInputHandler
     {
+        public const string ErrorMessage = "Invalid input format";
+
         public static List<string> ProcessTaxCalculationRequest(List<string> inputs)
         {
             List<string> resultList = new List<string>();
@@ -24,7 +26,7 @@ namespace CapitalGainCli
                 }
                 catch (Exception)
                 {
-                    resultList.Add("Invalid input format");
+                    resultList.Add(ErrorMessage);
                 }
             }
 
