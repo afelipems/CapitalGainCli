@@ -32,3 +32,6 @@ To run Capital Gain CLI you can run using **pure dotnet core**, which works in W
 If you want to change something in the code and test it, you should republish the project executable before using Docker. Using dotnet you have no worries, just save your changes and go for your dotnet run.
 
 Before using docker again, you should publish a new version of the app. To do that, you must run `dotnet publish -c Release`. Notes that you have to have .NET Core SDK installed. After publishing, you can run your container again.
+
+### Running project tests
+To run its tests, all you have to do is execute `dotnet test` on root folder.
