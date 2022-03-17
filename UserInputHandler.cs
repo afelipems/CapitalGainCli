@@ -14,11 +14,18 @@ namespace CapitalGainCli
 
             foreach(var input in inputs)
             {
-                var castedOperation = JsonConvert.DeserializeObject<List<FinancialOperation>>(input);
+                try
+                {
+                    var castedOperation = JsonConvert.DeserializeObject<List<FinancialOperation>>(input);
 
-                var result = TaxCalculationService.CalculateTaxes(castedOperation);
+                    var result = TaxCalculationService.CalculateTaxes(castedOperation);
 
-                resultList.Add(JsonConvert.SerializeObject(result));
+                    resultList.Add(JsonConvert.SerializeObject(result));
+                }
+                catch (Exception)
+                {
+                    resultList.Add("Invalid input format");
+                }
             }
 
             return resultList;
