@@ -9,7 +9,14 @@ namespace CapitalGainCli
         {
             while (true)
             {
-                ProcessUserOperation();
+                try
+                {
+                    ProcessUserOperation();
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("An error has occurred. Try again.");
+                }
             }
         }
 
