@@ -35,3 +35,7 @@ Before using docker again, you should publish a new version of the app. To do th
 
 ### Running project tests
 To run its tests, all you have to do is execute `dotnet test` on root folder.
+
+### General observations
+- The most important test cases were written in TaxCalculationService, which holds core business rules.
+- The UserInputHandler tests only focus on handler major responsibilities, which are serializing data and handling inputs independently and error safe.
