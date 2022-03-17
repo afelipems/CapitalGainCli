@@ -1,12 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CapitalGainCli
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            while (true)
+            {
+                ProcessUserOperation();
+            }
+        }
+
+        private static void ProcessUserOperation()
+        {
+            var operationsInput = new List<string>();
+
+            while (true)
+            {
+                var input = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    break;
+                }
+
+                var splittedInput = input.Split("\n");
+
+                operationsInput.AddRange(splittedInput);
+            }
+
+            var results = UserInputHandler.ProcessTaxCalculationRequest(operationsInput);
+
+            foreach(var result in results)
+            {
+                Console.WriteLine(result);
+            }
         }
     }
 }

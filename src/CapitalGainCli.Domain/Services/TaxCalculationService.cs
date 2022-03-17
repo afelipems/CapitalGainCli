@@ -1,5 +1,6 @@
 ﻿using CapitalGainCli.Domain.Entities;
 using CapitalGainCli.Domain.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace CapitalGainCli.Domain.Services
@@ -67,7 +68,7 @@ namespace CapitalGainCli.Domain.Services
         private static void AddTaxResult(List<TaxCalculationResult> taxCalculationResults, decimal liquidProfit)
         {
             var taxValue = liquidProfit * TaxFeePercentage;
-            taxCalculationResults.Add(new TaxCalculationResult { Tax = taxValue });
+            taxCalculationResults.Add(new TaxCalculationResult { Tax = Math.Round(taxValue, 2) });
         }
     }
 }
