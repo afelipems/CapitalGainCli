@@ -19,41 +19,26 @@ namespace CapitalGainCli.Domain.Services
 
             foreach(var operation in financialOperations)
             {
-                if(operation.Operation == OperationType.Buy)
-                {
-                    buyHistory.Add(operation);
-                    averageOperationValue = AverageCalculator.CalculateAssetWeightedAverageValue(buyHistory);
-                    AddZeroTaxResult(resultList);
-                    continue;
-                }
+                var hasProcessedAnyTaxExemptOperation = ProcessTaxExemptTransactionsIfRequired(operation, ref lossAmount, ref averageOperationValue, ref buyHistory, ref resultList);
 
-                if(operation.UnitCost < averageOperationValue)
+                if (hasProcessedAnyTaxExemptOperation)
                 {
-                    AddZeroTaxResult(resultList);
-                    lossAmount += (operation.Quantity * averageOperationValue) - (operation.Quantity * operation.UnitCost);
-                    continue;
-                }
-
-                if((operation.Quantity * operation.UnitCost) <= TaxCollectionMinimumThreshold)
-                {
-                    AddZeroTaxResult(resultList);
                     continue;
                 }
 
                 decimal profit = (operation.Quantity * operation.UnitCost) - (operation.Quantity * averageOperationValue);
                 decimal profitLessLoss = profit - lossAmount;
 
-                if(profitLessLoss <= 0)
+                switch (profitLessLoss)
                 {
-                    AddZeroTaxResult(resultList);
-                    lossAmount -= profit;
-                    continue;
-                }
-                else
-                {
-                    AddTaxResult(resultList, profitLessLoss);
-                    lossAmount = 0;
-                    continue;
+                    case <= 0:
+                        AddZeroTaxResult(resultList);
+                        lossAmount -= profit;
+                        continue;
+                    default:
+                        AddTaxResult(resultList, profitLessLoss);
+                        lossAmount = 0;
+                        continue;
                 }
             }
 
@@ -69,6 +54,32 @@ namespace CapitalGainCli.Domain.Services
         {
             var taxValue = liquidProfit * TaxFeePercentage;
             taxCalculationResults.Add(new TaxCalculationResult { Tax = Math.Round(taxValue, 2) });
+        }
+
+        private static bool ProcessTaxExemptTransactionsIfRequired(FinancialOperation operation, ref decimal lossAmount, ref decimal averageOperationValue, ref List<FinancialOperation> buyHistory, ref List<TaxCalculationResult> resultList)
+        {
+            if (operation.Operation == OperationType.Buy)
+            {
+                buyHistory.Add(operation);
+                averageOperationValue = AverageCalculator.CalculateAssetWeightedAverageValue(buyHistory);
+                AddZeroTaxResult(resultList);
+                return true;
+            }
+
+            if (operation.UnitCost < averageOperationValue)
+            {
+                AddZeroTaxResult(resultList);
+                lossAmount += (operation.Quantity * averageOperationValue) - (operation.Quantity * operation.UnitCost);
+                return true;
+            }
+
+            if ((operation.Quantity * operation.UnitCost) <= TaxCollectionMinimumThreshold)
+            {
+                AddZeroTaxResult(resultList);
+                return true;
+            }
+
+            return false;
         }
     }
 }
